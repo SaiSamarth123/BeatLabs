@@ -3,18 +3,29 @@ import React, { useState } from "react";
 function BeatMakerForm() {
   const [mood, setMood] = useState("");
   const [theme, setTheme] = useState("");
+  const [audioFile, setAudioFile] = useState(null);
+  const [instrument, setInstrument] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("http://localhost:3001/generate-beat", {
+    const formData = new FormData();
+    formData.append("audio", audioFile);
+    formData.append("instrument", instrument);
+
+    fetch("http://localhost:3001/convert", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ mood, theme }),
+      body: formData,
     })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `converted-${instrument}.mp3`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      })
       .catch((error) => {
         console.error("Error:", error);
       });
@@ -42,7 +53,25 @@ function BeatMakerForm() {
         </select>
       </label>
       <br />
-      <button type="submit">Generate Beat</button>
+      <label>
+        Audio File:
+        <input type="file" onChange={(e) => setAudioFile(e.target.files[0])} />
+      </label>
+      <br />
+      <label>
+        Instrument:
+        <select
+          value={instrument}
+          onChange={(e) => setInstrument(e.target.value)}
+        >
+          <option value="">Select Instrument</option>
+          <option value="piano">Piano</option>
+          <option value="guitar">Guitar</option>
+          {/* Add more instruments as needed */}
+        </select>
+      </label>
+      <br />
+      <button type="submit">Convert</button>
     </form>
   );
 }
