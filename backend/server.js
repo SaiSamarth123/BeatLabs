@@ -7,7 +7,8 @@ const upload = multer({ dest: "uploads/" });
 const port = 3001; // Ensure this port is different from your React app's port
 
 app.use(express.json()); // Middleware to parse JSON bodies
-// server.jconst aubio = require('aubio');
+
+const aubio = require("aubio");
 
 // Function to detect pitch in audio
 function detectPitch(audioBuffer) {
@@ -35,6 +36,7 @@ app.post("/detectpitch", upload.single("audio"), (req, res) => {
   res.json({ pitchArray });
 });
 s;
+
 const ffmpeg = require("fluent-ffmpeg");
 
 // Function to preprocess audio using ffmpeg
