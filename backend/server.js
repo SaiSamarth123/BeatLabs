@@ -100,7 +100,41 @@ app.post("/convert", upload.single("audio"), (req, res) => {
     fs.unlinkSync(audioPath); // Clean up the uploaded file
   });
 });
+// Load necessary modules
+const fs = require("fs");
+const { exec } = require("child_process");
+const aubio = require("aubio");
 
+// Load audio file into memory
+const audioFilePath = "path_to_audio_file.wav";
+const audioBuffer = fs.readFileSync(audioFilePath);
+
+// Create aubio source
+const source = new aubio.source(audioFilePath, 0, audioBuffer.length);
+
+// Energy-based onset detection parameters
+const bufferSize = 512; // Size of the audio buffer for analysis
+const hopSize = bufferSize / 2; // Hop size for moving window
+const threshold = 1.5; // Energy threshold for onset detection (adjust as needed)
+
+// Initialize energy and onset detection
+const energy = new aubio.mfcc(bufferSize, bufferSize / 2, source.channels);
+const onset = new aubio.onset("energy", bufferSize, hopSize, source.samplerate);
+
+// Process audio and detect onsets
+let onsetArray = [];
+while (source.read(bufferSize) > 0) {
+  const frame = source.getFloatBuffer(bufferSize);
+  const frameEnergy = energy.do(frame);
+  const isOnset = onset.do(frame);
+
+  if (isOnset && frameEnergy > threshold) {
+    const timestamp = (onsetArray.length * hopSize) / source.samplerate; // Convert to seconds
+    onsetArray.push(timestamp);
+  }
+}
+
+console.log("Onset Array:", onsetArray);
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
