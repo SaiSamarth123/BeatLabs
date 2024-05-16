@@ -1,16 +1,15 @@
 const fs = require("fs");
 const jsmidgen = require("jsmidgen");
 
-// Function to generate MIDI file from melody
 function generateMIDI(melody) {
   const file = new jsmidgen.File();
   const track = new jsmidgen.Track();
   file.addTrack(track);
 
-  const tempo = 120; // Beats per minute
-  const ticksPerBeat = 128; // MIDI standard
-  const velocity = 100; // MIDI velocity
-  const channel = 0; // MIDI channel
+  const tempo = 120;
+  const ticksPerBeat = 128;
+  const velocity = 100;
+  const channel = 0;
   let currentTime = 0;
 
   melody.forEach((note) => {
@@ -24,10 +23,16 @@ function generateMIDI(melody) {
   return file;
 }
 
-// Function to save MIDI file
 function saveMIDI(file, outputFilePath) {
   fs.writeFileSync(outputFilePath, file.toBytes(), "binary");
   console.log(`MIDI file saved as ${outputFilePath}`);
 }
 
-module.exports = { generateMIDI, saveMIDI };
+(async () => {
+  const melody = JSON.parse(process.argv[2]);
+  const outputFilePath = process.argv[3];
+  const instrument = process.argv[4];
+
+  const midiFile = generateMIDI(melody);
+  saveMIDI(midiFile, outputFilePath);
+})();

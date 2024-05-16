@@ -2,7 +2,6 @@ const fs = require("fs");
 const aubio = require("aubio");
 const ffmpeg = require("fluent-ffmpeg");
 
-// Function to detect pitch in audio
 async function detectPitch(audioPath) {
   const audioBuffer = fs.readFileSync(audioPath);
 
@@ -19,16 +18,14 @@ async function detectPitch(audioPath) {
     }
 
     pitchDetection.end();
-
     resolve(pitchArray);
   });
 }
 
-// Function to preprocess audio using ffmpeg
 async function preprocessAudio(audioPath, outputAudioPath) {
   return new Promise((resolve, reject) => {
     ffmpeg(audioPath)
-      .audioFilters("volume=0.5") // Apply audio normalization
+      .audioFilters("volume=0.5")
       .output(outputAudioPath)
       .on("end", () => {
         console.log("Audio preprocessing complete");
@@ -42,4 +39,8 @@ async function preprocessAudio(audioPath, outputAudioPath) {
   });
 }
 
-module.exports = { detectPitch, preprocessAudio };
+(async () => {
+  const audioPath = process.argv[2];
+  const pitchData = await detectPitch(audioPath);
+  console.log(JSON.stringify(pitchData));
+})();
