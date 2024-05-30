@@ -1,70 +1,141 @@
-# Getting Started with Create React App
+# Vocal to Instrumental Converter
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a web application that allows users to upload a vocal or hum recording and convert it into an instrumental or beat. The backend is powered by FastAPI and Node.js, while the frontend is built with React.js. 
 
-## Available Scripts
+## Table of Contents
 
-In the project directory, you can run:
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+  - [Backend Setup](#backend-setup)
+  - [Frontend Setup](#frontend-setup)
+- [Running the Project](#running-the-project)
+- [API Endpoints](#api-endpoints)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Upload vocal or hum recordings
+- Process audio to detect pitch
+- Convert recordings to instrumentals/beats
+- Download generated MIDI files
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Requirements
 
-### `npm test`
+- Python 3.8+
+- Node.js 14+
+- npm 6+
+- FastAPI
+- Librosa
+- Aubio
+- Fluent-ffmpeg
+- jsmidgen
+- React.js
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Installation
 
-### `npm run build`
+### Backend Setup
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    ```bash
+    git clone https://github.com/yourusername/vocal-to-instrumental.git
+    cd vocal-to-instrumental/backend
+    ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Create a virtual environment and activate it:
 
-### `npm run eject`
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+    ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+3. Install the Python dependencies:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    ```bash
+    pip install fastapi uvicorn librosa numpy
+    ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+4. Install Node.js dependencies:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+    ```bash
+    npm install aubio fluent-ffmpeg jsmidgen fs
+    ```
 
-## Learn More
+5. Create the necessary directories:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    ```bash
+    mkdir temp
+    ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Frontend Setup
 
-### Code Splitting
+1. Navigate to the frontend directory:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+    ```bash
+    cd ../frontend
+    ```
 
-### Analyzing the Bundle Size
+2. Install the React.js dependencies:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+    ```bash
+    npm install
+    ```
 
-### Making a Progressive Web App
+## Running the Project
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Running the Backend
 
-### Advanced Configuration
+1. Navigate to the backend directory and start the FastAPI server:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+    ```bash
+    cd backend
+    uvicorn main:app --reload
+    ```
 
-### Deployment
+### Running the Frontend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+1. Navigate to the frontend directory and start the React development server:
 
-### `npm run build` fails to minify
+    ```bash
+    cd frontend
+    npm start
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+2. Open your browser and go to `http://localhost:3000` to access the application.
+
+## API Endpoints
+
+### POST `/process-audio/`
+
+- Description: Processes an uploaded audio file to detect pitch and analyze its duration.
+- Request Body: `multipart/form-data` with a file field named `file`.
+- Response: JSON object containing the duration and pitch data.
+
+### POST `/generate-midi/`
+
+- Description: Converts an uploaded audio file to a MIDI file based on the detected melody and selected instrument.
+- Request Body: `multipart/form-data` with a file field named `file` and a form field named `instrument`.
+- Response: JSON object containing the path to the generated MIDI file.
+
+## Usage
+
+1. Open the web application in your browser.
+2. Upload your vocal or hum recording in MP3 format.
+3. Select the desired instrument for conversion.
+4. Submit the form to process the audio.
+5. Download the generated MIDI file from the provided link.
+
+## Contributing
+
+1. Fork the repository.
+2. Create a new branch: `git checkout -b feature-branch-name`
+3. Make your changes and commit them: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin feature-branch-name`
+5. Open a pull request.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
