@@ -1,4 +1,4 @@
-# Vocal to Instrumental Converter
+# BeatLabs
 
 This project is a web application that allows users to upload a vocal or hum recording and convert it into an instrumental or beat. The backend is powered by FastAPI and Node.js, while the frontend is built with React.js. 
 
