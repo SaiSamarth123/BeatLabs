@@ -40,7 +40,12 @@ async function preprocessAudio(audioPath, outputAudioPath) {
 }
 
 (async () => {
-  const audioPath = process.argv[2];
-  const pitchData = await detectPitch(audioPath);
-  console.log(JSON.stringify(pitchData));
+  try {
+    const audioPath = process.argv[2];
+    const pitchData = await detectPitch(audioPath);
+    console.log(JSON.stringify(pitchData));
+  } catch (err) {
+    console.error("Error in audioprocessing.js:", err);
+    process.exit(1);  // Exit with an error code
+  }
 })();
